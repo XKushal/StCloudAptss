@@ -2,47 +2,15 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
-
+var Apartments = require("./models/apartments");
+var seedDB = require("./seeds");
+// var Comment  = require("./models/comment");
+// var User  = require("/models/user");
 mongoose.connect('mongodb://localhost:27017/StCloudApts', { useNewUrlParser: true });
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
-
-//Schema setup
-var apartmentsSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
-
-//compile schema into the model
-var Apartments = mongoose.model("Apartment", apartmentsSchema);//model
-
-// Apartments.create(
-//      {
-//          name: "MetroView", 
-//          image: "https://pixabay.com/get/ed34b70f2ef61c22d2524518b7444795ea76e5d004b0144593f5c77ea5efb5_340.jpg",
-//          description: "Really nice bedrooms, with better restroom and awesome kitchen."
-//      },
-//      function(err, apartments){
-//       if(err){
-//           console.log(err);
-//       } else {
-//           console.log(apartments);
-//       }
-//     });
-
-// var apartments = [
-//         {name: "metroView", image: "https://farm8.staticflickr.com/7042/6913952757_e8cf16bb13.jpg"},
-//         {name: "UVTs", image: "https://pixabay.com/get/ef3cb10e2afd1c22d2524518b7444795ea76e5d004b0144593f4c67aa0eeb7_340.jpg"},
-//         {name: "Coborns", image: "https://farm3.staticflickr.com/2679/4135037560_bfff6c74db.jpg"},
-//         {name: "metroView", image: "https://farm8.staticflickr.com/7042/6913952757_e8cf16bb13.jpg"},
-//         {name: "UVTs", image: "https://pixabay.com/get/ef3cb10e2afd1c22d2524518b7444795ea76e5d004b0144593f4c67aa0eeb7_340.jpg"},
-//         {name: "Coborns", image: "https://farm3.staticflickr.com/2679/4135037560_bfff6c74db.jpg"},
-//         {name: "metroView", image: "https://farm8.staticflickr.com/7042/6913952757_e8cf16bb13.jpg"},
-//         {name: "UVTs", image: "https://pixabay.com/get/ef3cb10e2afd1c22d2524518b7444795ea76e5d004b0144593f4c67aa0eeb7_340.jpg"},
-//         {name: "Coborns", image: "https://farm3.staticflickr.com/2679/4135037560_bfff6c74db.jpg"}
-// ];
+seedDB();
 
 app.get("/", function(req, res){
    res.render("landing"); 
@@ -88,7 +56,7 @@ app.get("/apartments/new", function(req, res) {
 //SHOW: Shows the detail info about one apartment
 app.get("/apartments/:id", function(req, res) {
     //find the apartment with provoded id
-    Apartments.findById(req.params.id, function(err, foundApt){
+    Apartments.findById(req.params.id).populate("comments").exec(function(err, foundApt){
         if(err){
             console.log("error detected.");
             console.log(err);
