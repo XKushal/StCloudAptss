@@ -1,0 +1,39 @@
+<% include ../partials/header %>
+
+ <div class = "container">
+      <header class = "jumbotron">
+        <div class = "container">
+            <h1>Welcome to Saint Cloud Apartments</h1>
+            <p>Explore your nearest apartments</p>
+            <p>
+                <a class ="btn btn-primary btn-lg" href ="/apartments/new"> Add new Apartment </a>
+            </p>
+        </div>
+    </header>
+    
+    <div class="row text-center" style = "display:flex; flex-wrap: wrap;">
+        <% apartments.forEach(function(apartments){ %>
+            <div class = "col-sm-6 col-md-4">
+                <div class = "thumbnail">
+                    <img src = "<%= apartments.image %>">
+                    <div class = "caption">
+                        <h4><%= apartments.name %></h4>
+                        <% if (apartments.rating === 0) { %>
+                    <em>No reviews yet.</em>
+                    <% } else { %>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star <% if (apartments.rating > 1.5) { %> checked <% } %>"></span>
+                    <span class="fa fa-star <% if (apartments.rating > 2.5) { %> checked <% } %>"></span>
+                    <span class="fa fa-star <% if (apartments.rating > 3.5) { %> checked <% } %>"></span>
+                    <span class="fa fa-star <% if (apartments.rating > 4.5) { %> checked <% } %>"></span>
+                    <% } %>
+                    </div>
+                    <p>
+                        <a href = "/apartments/<%= apartments._id %>" class = "btn btn-primary">More Info</a>
+                    </p>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+ </div>
+<% include ../partials/footer %>
